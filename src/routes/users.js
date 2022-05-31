@@ -86,8 +86,8 @@ router.post('/subir', upload.single('file'),async function  (req, res) {
       console.log(json);
       json.forEach(async element => {
         const userPayload = {
-          username: element.username,
-          password: element.Password,
+          username: element.username || element.Username ,
+          password: element.Password || element.password,
         };
         let username = await findUserexist({ username: userPayload.username });
         if (!username) {
