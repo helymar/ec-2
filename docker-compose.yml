@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    volumes:
+      - /usr/src/app/node_modules
+      - .:/usr/src/app
+    environment:
+      DATABASE_URL: postgres://trinos_user:root_12345@db:5432/trinos
+      JWT_SECRET: 8661fa8f3bd52c3ca120624a700888437d4ae4545343169de9e6666cdb248f62
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+  db:
+    image: postgres:13.0-alpine
+    environment:
+      POSTGRES_DB: trinos
+      POSTGRES_USER: trinos_user
+      POSTGRES_PASSWORD: root_12345
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+volumes:
+  postgres: ~
