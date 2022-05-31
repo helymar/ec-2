@@ -27,9 +27,7 @@ const findUser2 = async (where) => {
   Object.assign(where, { active: true });
 
   const user = await User.findOne({ where });
-  if (!user) {
-    res.send('<script>alert("nok"); window.location.href = "/login"; </script>');
-  }
+  
 
   return user;
 };
@@ -303,7 +301,7 @@ const createUserform = async (req, res, next) => {
     };
 
     if (Object.values(userPayload).some((val) => val === undefined)) {
-      res.send('<script>alert("Payload must contain name, username, email and password"); window.location.href = "/registro"; </script>');
+      res.send('<script>alert("Payload must contain name, username and password"); window.location.href = "/registro"; </script>');
     }
 
     let username = await findUserexist({ username: userPayload.username });
@@ -327,22 +325,28 @@ const loginUser2 = async (req, res, next) => {
     const { body } = req;
 
     const user = await findUser2({ username: body.username });
-
-    if (!(await user.comparePassword(body.Password))) {
+    if (!user) {
       res.send('<script>alert("nok"); window.location.href = "/login"; </script>');
+    }else{
+      if (!(await user.comparePassword(body.Password))) {
+        res.send('<script>alert("nok"); window.location.href = "/login"; </script>');
+      }else{
+        const userPayload = {
+          lastLoginDate: new Date(),
+        };
+    
+        Object.assign(user, userPayload);
+    
+        await user.save();
+    
+        const accessToken = generateAccessToken(user.id);
+        new AuthSerializer(accessToken, user.id)
+     
+        res.send('<script>alert("'+user.id+'"); window.location.href = "/inicio"; </script>');
+      }
+      
     }
-    const userPayload = {
-      lastLoginDate: new Date(),
-    };
-
-    Object.assign(user, userPayload);
-
-    await user.save();
-
-    const accessToken = generateAccessToken(user.id);
-    new AuthSerializer(accessToken, user.id)
- 
-    res.send('<script>alert("'+user.id+'"); window.location.href = "/inicio"; </script>');
+    
   } catch (err) {
     next(err);
   }
