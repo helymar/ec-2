@@ -22,6 +22,18 @@ const findUser = async (where) => {
   return user;
 };
 
+
+const findUser2 = async (where) => {
+  Object.assign(where, { active: true });
+
+  const user = await User.findOne({ where });
+  if (!user) {
+    res.send('<script>alert("nok"); window.location.href = "/login"; </script>');
+  }
+
+  return user;
+};
+
 const findUserexist = async (where) => {
   Object.assign(where, { active: true });
 
@@ -314,7 +326,7 @@ const loginUser2 = async (req, res, next) => {
   try {
     const { body } = req;
 
-    const user = await findUser({ username: body.username });
+    const user = await findUser2({ username: body.username });
 
     if (!(await user.comparePassword(body.Password))) {
       res.send('<script>alert("nok"); window.location.href = "/login"; </script>');
