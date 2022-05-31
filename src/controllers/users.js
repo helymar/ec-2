@@ -281,6 +281,75 @@ const loginform = async (req, res, next) => {
 const registrerform = async (req, res, next) => {
   res.render('registro');
 }
+const createUserform = async (req, res, next) => {
+  try {
+    const { body } = req;
+
+    const userPayload = {
+      username: body.username,
+      password: body.Password,
+    };
+
+    if (Object.values(userPayload).some((val) => val === undefined)) {
+      res.send('<script>alert("Payload must contain name, username, email and password"); window.location.href = "/registro"; </script>');
+    }
+
+    let username = await findUserexist({ username: userPayload.username });
+    if (username) {
+      res.send('<script>alert("nok"); window.location.href = "/registro"; </script>');
+
+    }else{
+      const user = await User.create(userPayload);
+      res.send('<script>alert("ok"); window.location.href = "/registro"; </script>');
+    }
+      
+    
+    
+  } catch (err) {
+    next(err);
+  }
+};
+
+const loginUser2 = async (req, res, next) => {
+  try {
+    const { body } = req;
+
+    const user = await findUser({ username: body.username });
+
+    if (!(await user.comparePassword(body.Password))) {
+      res.send('<script>alert("nok"); window.location.href = "/login"; </script>');
+    }
+    const userPayload = {
+      lastLoginDate: new Date(),
+    };
+
+    Object.assign(user, userPayload);
+
+    await user.save();
+
+    const accessToken = generateAccessToken(user.id);
+    new AuthSerializer(accessToken, user.id)
+ 
+    res.send('<script>alert("'+user.id+'"); window.location.href = "/inicio"; </script>');
+  } catch (err) {
+    next(err);
+  }
+};
+
+const dasboardhome = async (req, res, next) => {
+  res.render('dashboard');
+}
+const deleteallusers = async (req, res, next) => {
+  try {
+
+    const users = await User.destroy({ where: {} });
+    res.send('<script>alert("ok (delete all)"); window.location.href = "/login"; </script>');
+  } catch (err) {
+    res.send('<script>alert("nok (delete all)"); window.location.href = "/login"; </script>');
+    next(err);
+  }
+};
+
 const logoutUser = async (req, res, next) => {
   const accessToken = req.headers.authorization?.split(' ')[1];
   blacklistTokenInser(accessToken);
@@ -300,5 +369,9 @@ module.exports = {
   logoutUser,
   deleteall,
   loginform,
-  registrerform
+  registrerform,
+  createUserform,
+  loginUser2,
+  dasboardhome,
+  deleteallusers
 };

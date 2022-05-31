@@ -36,19 +36,19 @@
 			<div class="row align-items-center ">
 				<div class="col-md-12">
 					<div class="card-body">
-						<form action="/loginUser" method="post">
-						<h4 class="mb-3 f-w-400">Inicio de sesión</h4>
+						<h4 class="mb-3 f-w-400">dashboard</h4>
 						<hr>
-						<div class="form-group mb-3">
-							<input type="text" class="form-control" name="username" id="username" placeholder="Username">
-						</div>
-						<div class="form-group mb-4">
-							<input type="password" class="form-control" name="Password" id="Password" placeholder="Password">
-						</div>
+						<a href="/borrarusuarios" class="btn btn-block btn-primary mb-4">Borrar todos los usuarios</a>
+						<form action="/subir" method="post" enctype="multipart/form-data" >
 
-						<button type="submit" class="btn btn-block btn-primary mb-4">Iniciar sesión</button>
+							  Sube un archivo:
+						  
+							  <input class="form-control" type="file" name="file">
+						  
+							  <button type="submit" class="btn btn-block btn-primary mb-4">Subir</button>
+						  						  
+						  </form>
 						<hr>
-					</form>
 					</div>
 				</div>
 			</div>
