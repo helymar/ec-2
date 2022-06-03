@@ -11,7 +11,7 @@ npm install
 docker-compose up
 ```
 
-ENPOIND
+ENDPOINT
 
 /login
 /registro
