@@ -1,5 +1,4 @@
 # ec-2
-Student: HELYMAR FELIPE ACOSTA ESCOBAR - 200062508
 
 ## Setup
 ```
@@ -11,9 +10,11 @@ npm install
 docker-compose up
 ```
 
-ENDPOINT
+## ENDPOINT
 
+```
 /login
 /registro
 /inicio
 /borrarusuarios
+```
